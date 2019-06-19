@@ -5,15 +5,15 @@ import csv
 connection = pymysql.connect (host='localhost',
                              user='root',
                              password='password',
-                             db='nba_analytics',
-                             charset='utf8mb4',
+                             db='nba',
                              cursorclass=pymysql.cursors.DictCursor)
 with connection.cursor() as cursor:
         # Read a single record
-        sql = "SELECT * FROM players_advanced_statistics"
+        sql = "SELECT * FROM new_players_advanced_statistics"
         cursor.execute(sql)
         rows = cursor.fetchall()
 
+# 標準化
 regre_lists = {"tspct": [3.963, -1.651],
                "efgpct": [3.469,-1.241],
                "threepar": [0.177, 0.455],
@@ -24,7 +24,6 @@ regre_lists = {"tspct": [3.963, -1.651],
                "blkpct":[0.02, 0.343],
                "tovpct":[-0.017, 0.717]}
 
-#wiat to change
 player_ref_lists = { 
         "trbpct": [-1.067, -0.282, 0.785],
         "astpct": [0.611, 0.419, -0.192],
@@ -45,12 +44,16 @@ with open('output.csv', 'w', newline='') as csvfile:
         team_result_data[team] = 0
         team_result_data_count[team] = 0
 
+
     for row in rows:
         player_result_data = [row['name'], row['team']]
         for key, regre_data in regre_lists.items():
              if key in str(player_ref_lists.keys()):
                  value = (float(row[key])*regre_lists[key][0] + regre_lists[key][1] - player_ref_lists[key][0]) / player_ref_lists[key][2]
-                 player_result_data.append(round(value,3))
+                 if key == "trbpct":
+                     player_result_data.append(round(value/3, 3))
+                 else:
+                     player_result_data.append(round(value,3))
              else:
                  player_result_data.append(round(float(row[key])*regre_lists[key][0] + regre_lists[key][1],3))
             
@@ -68,7 +71,7 @@ with open('output2.csv', 'w', newline='') as csvfile2:
     for player_data in player_result_datas:
         writer2.writerow([player_data[0],player_data[11]])
 
-print(team_result_data)
-print(player_result_datas)
+# print(team_result_data)
+# print(player_result_datas)
     
     

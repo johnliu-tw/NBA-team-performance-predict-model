@@ -17,13 +17,12 @@ from random import random
 connection = pymysql.connect (host='localhost',
                              user='root',
                              password='password',
-                             db='nba_analytics',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+                             db='nba',
+                            cursorclass=pymysql.cursors.DictCursor)
 rows={}
 with connection.cursor() as cursor:
         # Read a single record
-        sql = "SELECT * FROM team_advanced_statistics where id > 50000"
+        sql = "SELECT * FROM team_advanced_statistics"
         cursor.execute(sql)
         rows = cursor.fetchall()
 tspct = [row['tspct'] for row in rows]
@@ -39,19 +38,6 @@ blkpct = [row['blkpct'] for row in rows]
 tovpct = [row['tovpct'] for row in rows]
 result = [1 if row['result'] == "W" else 0 for row in rows]
 
-# # PRINT
-
-
-
-########################################
-X = np.linspace(0, 10)
-f = lambda x: x #y=x
-F = np.vectorize(f)
-Y = F(X)
-
-#random data by F(X) + random residual(upper bound=2)
-num = 15 #number of data
-random_sign = np.vectorize(lambda x: x if np.random.sample() > 0.5 else -x)
 data_X = {
     "tspct": tspct,
     "efgpct": efgpct,
@@ -70,9 +56,6 @@ data_Y = result
 
 LR_X = [[0,0.5,1],[10,30,50]]
 LR_Y = []
-
-
-
 plots = []
 
 for key, subDataX in data_X.items():
@@ -119,14 +102,3 @@ grid = gridplot([[plots[0],plots[1],plots[2]],[plots[3],plots[4],plots[5]],[plot
 show(grid)
 output_file("figure.html")
 
-
-# TODO
-# MILESTONES
-# mergeList (+)
-# + with +, - with -
-# totalX, totalY
-
-# HOW TO PUSH
-# git add .
-# git commit -m ".."
-# git push
