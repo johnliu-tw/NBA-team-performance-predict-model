@@ -1,13 +1,13 @@
-import sys # system
-from bs4 import BeautifulSoup # html parse (解析程式碼)
-import time # for delay
-from selenium import webdriver # web simulator (網頁模擬器)
-from selenium.webdriver.chrome.options import Options # web simulator (網頁模擬器)
-import os # operation system
-import psycopg2
+import sys
+from bs4 import BeautifulSoup 
+import time 
+from selenium import webdriver 
+from selenium.webdriver.chrome.options import Options 
+import os 
+import pymysql
 
-connection = psycopg2.connect (database = "postgres", user = "postgres", password = "will0723", 
-                               host = "127.0.0.1", port = "5432")
+connection = pymysql.connect (db = "nba", user = "root", password = "password", 
+                               host = "localhost")
 options = Options()
 options.add_argument('--headless') # hidden browser (無標頭)
 options.add_argument('--disable-gpu') 
