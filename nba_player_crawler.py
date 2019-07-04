@@ -16,7 +16,7 @@ driver = webdriver.Chrome(os.getcwd() + "/chromedriver") # assign chromedriver
 driver2 = webdriver.Chrome(os.getcwd() + "/chromedriver")
 
 try:
-    for i in range(ord("a"), ord("z")+1):
+    for i in range(ord("m"), ord("z")+1):
         driver.get('''https://www.basketball-reference.com/players/{}/'''.format(chr(i))) # designate website
         sourceCode = BeautifulSoup (driver.page_source, "html.parser") # initialize page source
         contents = sourceCode.find_all(id = "players")
@@ -47,8 +47,6 @@ try:
                             player_team = player_statlist[1].text
                             player_pos = player_statlist[3].text
                             player_game = int(player_statlist[4].text.strip().replace(" ",""))
-                            print(player_statlist[4].text)
-                            print(player_game)
                             player_tspct = float("0" + player_statlist[7].text)
                             player_efgpct = float("0" + total_data.find_all("td")[16].text)
                             player_3PAr = float("0" + player_statlist[8].text)
@@ -68,12 +66,12 @@ try:
                             cursor = connection.cursor()
                             sql = '''INSERT INTO nba.players_advanced_statistics 
                                     (name, team, pos, game, tspct, efgpct, threepar, ftr, orbpct, drbpct, 
-                                    trbpct, astpct, stlpct, blkpct, tovpct, ws_rate) VALUES ("{}", "{}","{}",
-                                    {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});'''.format(player_name, player_team, player_pos, 
+                                    trbpct, astpct, stlpct, blkpct, tovpct, usg_rate, ws_rate) VALUES ("{}", "{}","{}",
+                                    {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});'''.format(player_name, player_team, player_pos, 
                                     player_game, player_tspct, player_efgpct, 
                                     player_3PAr, player_FTr, player_ORBpct, player_DRBpct, 
                                     player_TRBpct, player_ASTpct, player_STLpct, player_BLKpct, 
-                                    player_TOVpct, player_WS48)
+                                    player_TOVpct, player_USGpct, player_WS48)
                             print(sql)
                             cursor.execute (sql)
                             connection.commit()
